@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  relink_app:
+    build: ./web
+    ports:
+      - "6100:5000"
+    volumes:
+      - ./data:/app/data  # Mount a host directory for data persistence
