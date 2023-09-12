@@ -22,13 +22,13 @@ Running the Application
 Clone this GitHub repository to your local machine.
 
 ``` bash
-git clone https://github.com/metahedgehog/link-redirection-docker.git
+git clone https://github.com/metahedgehog/dockerized-link-redirection.git
 ```
 
 Navigate to the project directory.
 
 ```bash
-cd link-redirection-docker
+cd dockerized-link-redirection
 ```
 
 Build the docker container
