@@ -1,5 +1,6 @@
 import os
 import threading
+import time
 from flask import Flask, redirect
 from dotenv import load_dotenv
 
@@ -7,31 +8,45 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-count = 0
-count_lock = threading.Lock()  # Lock to ensure safe access to the count variable
+
+# Read the previous count value from the count.txt file if it exists
+count_file_path = '/app/data/count.txt'
+if os.path.exists(count_file_path):
+    with open(count_file_path, "r") as count_file:
+        try:
+            count = int(count_file.read())
+        except ValueError:
+            count = 0
+else:
+    count = 0
+
+# Initialize last_count
+last_count = count
+
+# Lock to ensure safe access to the count variable
+count_lock = threading.Lock()
 
 # Get the target link from the environment variable
 target_link = os.getenv("TARGET_LINK")
 
-# Define the path to the count.txt file on the host machine
-count_file_path = '/app/data/count.txt'
-
 # Function to save the count to the count.txt file on the host machine
 def save_count():
-    global count
+    global count, last_count
     while True:
-        # Save the count to the count.txt file on the host machine
-        with open(count_file_path, "w") as count_file:
-            count_file.write(str(count))
+        # Check if the count has changed
+        if count != last_count:
+            # Save the count to the count.txt file on the host machine
+            with open(count_file_path, "w") as count_file:
+                count_file.write(str(count))
+            last_count = count  # Update last_count
+        # Sleep for a short period to reduce CPU usage
+        time.sleep(1)  # Adjust the sleep duration as needed
 
 @app.route('/')
 def redirect_to_external_link():
     global count
     with count_lock:
         count += 1
-        # Immediately save the count to the count.txt file
-        with open(count_file_path, "w") as count_file:
-            count_file.write(str(count))
     # Redirect to the target link from the environment variable
     return redirect(target_link, code=302)
 
