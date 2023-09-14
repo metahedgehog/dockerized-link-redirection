@@ -3,7 +3,7 @@ name: Test Dockerized Python App
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -22,7 +22,7 @@ jobs:
       run: docker-compose build
 
     - name: Run tests
-      run: docker-compose run relink_app python -m unittest discover
+      run: docker-compose run relink_app python -m unittest discover tests
 
     - name: Push Docker image to GitHub Container Registry (optional)
       run: |
