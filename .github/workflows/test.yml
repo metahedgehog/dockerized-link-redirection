@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
 
     steps:
     - name: Checkout code
@@ -22,4 +22,4 @@ jobs:
       run: docker-compose build
 
     - name: Run tests
-      run: docker-compose run relink_app python -m unittest discover tests
+      run: python -m unittest discover -s ./web/tests
