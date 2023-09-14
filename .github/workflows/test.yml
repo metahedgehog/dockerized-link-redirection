@@ -1,28 +1,31 @@
-import unittest
-import os
-from app import app
+name: Test Dockerized Python App
 
-class TestApp(unittest.TestCase):
+on:
+  push:
+    branches:
+      - master
 
-    def setUp(self):
-        app.config['TESTING'] = True
-        self.app = app.test_client()
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    def test_redirection(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_code, 302)  # Check if the response is a redirection
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    def test_count_file_missing(self):
-        # Rename the count.txt file to simulate its absence
-        os.rename('/app/data/count.txt', '/app/data/count.txt.bak')
-        response = self.app.get('/counter')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Visits: 0', response.data)  # Check if the count is 0
+    - name: Set up Docker
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
 
-    def tearDown(self):
-        # Restore the count.txt file if it was renamed
-        if os.path.exists('/app/data/count.txt.bak'):
-            os.rename('/app/data/count.txt.bak', '/app/data/count.txt')
+    - name: Build Docker image
+      run: docker-compose build
 
-if __name__ == '__main__':
-    unittest.main()
+    - name: Run tests
+      run: docker-compose run relink_app python -m unittest discover
+
+    - name: Push Docker image to GitHub Container Registry (optional)
+      run: |
+        echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+        docker tag your-image:tag ghcr.io/${{ github.repository_owner }}/your-image:tag
+        docker push ghcr.io/${{ github.repository_owner }}/your-image:tag
