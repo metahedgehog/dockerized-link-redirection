@@ -74,4 +74,6 @@ You can configure the application by modifying the environment variables in the 
 ___
 ### Contributing
 
+
+
 Contributions to this project are welcome! If you find any issues or have suggestions for improvements, please open an issue or create a pull request.
