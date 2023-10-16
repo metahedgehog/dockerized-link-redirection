@@ -20,6 +20,9 @@ jobs:
 
     - name: Install Flask
       run: pip install Flask==2.0.1
+      
+    - name: Install Werkzeug
+      run: pip install werkzeug
 
     - name: Build Docker image
       run: docker-compose build
