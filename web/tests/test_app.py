@@ -15,14 +15,16 @@ class TestApp(unittest.TestCase):
     def test_count_file_missing(self):
         # Rename the count.txt file to simulate its absence
         os.rename('/app/data/count.txt', '/app/data/count.txt.bak')
-        response = self.app.get('/counter')
+        response = self.app.get('/counter', data={'data': '/app/data'})
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Visits: 0', response.data)  # Check if the count is 0
 
-    def tearDown(self):
         # Restore the count.txt file if it was renamed
         if os.path.exists('/app/data/count.txt.bak'):
             os.rename('/app/data/count.txt.bak', '/app/data/count.txt')
+
+    def tearDown(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
