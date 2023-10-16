@@ -23,9 +23,3 @@ jobs:
 
     - name: Run tests
       run: docker-compose run relink_app python -m unittest discover tests
-
-    - name: Push Docker image to GitHub Container Registry (optional)
-      run: |
-        echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-        docker tag your-image:tag ghcr.io/${{ github.repository_owner }}/your-image:tag
-        docker push ghcr.io/${{ github.repository_owner }}/your-image:tag
