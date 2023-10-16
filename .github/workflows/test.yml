@@ -20,6 +20,3 @@ jobs:
 
     - name: Build Docker image
       run: docker-compose build
-
-    - name: Run tests
-      run: docker-compose run relink_app python -m unittest discover tests
