@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.9-alpine
 
 # Set the working directory to /app
 WORKDIR /app
